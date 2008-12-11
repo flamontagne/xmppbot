@@ -24,41 +24,42 @@ How to use it :
   
 require 'xmppbot'
 
+def register_callbacks
+  @bot.on_presence_received do |pres|
+    puts "#{pres.from} is now #{pres.to_s}"
+  end
+    
+  @bot.on_message_received do |msg|
+    if msg.body == "exit"
+      @bot.disconnect
+    else
+      stanza=XMPPBot::Message.new
+      stanza.to=msg.from
+      stanza.body="You said : #{msg.body}"
+      @bot.send(stanza)
+    end
+  end
+end
+
+
 @bot=XMPPBot::Bot.new
 @bot.jid="bot@example.com"
 @bot.password="secret"
 @bot.log_level = XMPPBot::Logging::DEBUG
-
-def register_callbacks
-    @bot.on_presence_received do |pres|
-		puts "#{pres.from} is now #{pres.to_s}"
-    end
-    
-    @bot.on_message_received do |msg|
-		if msg.body == "exit"
-			@bot.disconnect
-		else
-			stanza=XMPPBot::Message.new
-			stanza.to=msg.from
-			stanza.body="You said : #{msg.body}"
-			@bot.send(stanza)
-		end
-    end
-end
-
 @bot.auto_accept_subscriptions = true
+
 @bot.connect do |status|
-    if status == XMPPBot::ConnectionEvents::CONNECT
-		@bot.announce_presence
-		register_callbacks
-    else
-		@bot.disconnect
-    end
+  if status == XMPPBot::ConnectionEvents::CONNECT
+    @bot.announce_presence
+    register_callbacks
+  else
+    @bot.disconnect
+  end
 end  
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Compile and install StropheRuby (http://github.com/flamontagne/stropheruby)
 
 == INSTALL:
 
