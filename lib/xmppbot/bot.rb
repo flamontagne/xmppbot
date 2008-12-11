@@ -24,21 +24,17 @@ module XMPPBot
         end
         yield(status)
       end
-    
-      #FIXME: The following call works perfectly... but when you try stopping the program with CTRL-C, it produces a XMPP event watcher error.
-      #See the run_once method in strophe/src/event.c for details. For now I do my own control loop and call run_once manually            
-      #Thread.new {EventLoop.run(@ctx)}
-    
-      main_thread = Thread.current
-      return if @ctx.loop_status != 0
-      @ctx.loop_status = 1        
-      th= Thread.new do
-        Thread.current.abort_on_exception = true    
-        while (@ctx.loop_status == 1) do 
-          StropheRuby::EventLoop.run_once(@ctx, 1)
-        end
-        main_thread.wakeup
+
+      main_thread = Thread.current      
+          
+      #start the event loop in a separate thread      
+      Thread.new do
+        Thread.current.abort_on_exception = true
+        StropheRuby::EventLoop.run(@ctx)
+      
+        #shutdown down strophe and wake up the calling thread 
         StropheRuby::EventLoop.shutdown
+        main_thread.wakeup
       end
     end
 
@@ -46,19 +42,15 @@ module XMPPBot
     def accept_subscriptions
       self.on_presence_received do |pres|
         if pres.stanza.type == "subscribe"
-          stanza = StropheRuby::Stanza.new
-          stanza.name = "presence"
-          stanza.type = "subscribed"
-          stanza.set_attribute("to",pres.stanza.attribute("from"))
-          self.send_stanza(stanza)
-          stanza.release
+          p = Presence.new
+          p.type = "subscribed"
+          p.to=pres.from
+          send(p)
     
-          stanza = StropheRuby::Stanza.new
-          stanza.name = "presence"
-          stanza.type = "subscribe"
-          stanza.set_attribute("to",pres.stanza.attribute("from"))
-          self.send_stanza(stanza)                    
-          stanza.release
+          p = Presence.new
+          p.type = "subscribe"
+          p.to = pres.from
+          send(p)
         end
       end
     end
@@ -83,8 +75,7 @@ module XMPPBot
       presence = StropheRuby::Stanza.new
       presence.name="presence"
       presence.set_attribute("show", "available")
-      self.send_stanza(presence)
-      presence.release
+      send_stanza(presence)    
     end
     
     #callback for message stanzas. The parameter sent in the code block is the received Message object.    
@@ -115,7 +106,7 @@ module XMPPBot
         loop do
           difference = (@last_send || Time.now) + 90 - Time.now
           if difference <= 0
-            self.announce_presence
+            announce_presence
             sleep(90)
           else
             sleep(difference)
