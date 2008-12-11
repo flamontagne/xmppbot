@@ -2,7 +2,7 @@
 
 == DESCRIPTION:
 
-Simple implementation on top of StropheRuby(http://github.com/flamontagne/stropheruby). 
+Simple implementation on top of StropheRuby(http://github.com/flamontagne/strophe_ruby/).
 It's for those who want to build simple xmpp bots quickly. It features only the essential :
 - auto accept subscriptions
 - callback for received messages
@@ -15,7 +15,7 @@ Warning : StropheRuby is very experimental at the moment. It is definitely NOT r
 == FEATURES/PROBLEMS:
 
 - Only tested under Debian
-- No TLS support for now. As soon as OpenSSL is working in Strophe (code.stanziq.com/strophe)
+- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe (http://code.stanziq.com/strophe)
 
 
 == SYNOPSIS:
