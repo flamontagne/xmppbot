@@ -26,11 +26,17 @@ module XMPPBot
       end
 
       main_thread = Thread.current      
-          
+    
       #start the event loop in a separate thread      
       Thread.new do
         Thread.current.abort_on_exception = true
-        StropheRuby::EventLoop.run(@ctx)
+        
+        #StropheRuby::EventLoop.run(@ctx)
+        
+        @ctx.loop_status=1
+        while @ctx.loop_status == 1
+          StropheRuby::EventLoop.run_once(@ctx,1)
+        end
       
         #shutdown down strophe and wake up the calling thread 
         StropheRuby::EventLoop.shutdown
