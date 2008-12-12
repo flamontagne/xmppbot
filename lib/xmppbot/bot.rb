@@ -40,29 +40,55 @@ module XMPPBot
 
     #accept subscription request from the user then send a subscription request to that same user.
     def accept_subscriptions
-      self.on_presence_received do |pres|
-        if pres.stanza.type == "subscribe"
-          p = Presence.new
-          p.type = "subscribed"
-          p.to=pres.from
-          send(p)
-    
-          p = Presence.new
-          p.type = "subscribe"
-          p.to = pres.from
-          send(p)
+      on_presence_received do |pres|
+        if pres.type == "subscribe"
+          accept_subscription_from(pres.from)          
+          subscribe_to(pres.from)
         end
       end
     end
 
+    def accept_subscription_from(jid)
+      p = Presence.new
+      p.type = "subscribed"
+      p.to=jid.scrap_resource
+      self.send(p)
+    end
+    
+    def subscribe_to(jid)
+      p = Presence.new
+      p.type = "subscribe"
+      p.to = jid.scrap_resource
+      self.send(p)    
+    end
+    
+    def unsubscribe_from(jid)
+      iq = StropheRuby::Stanza.new
+      iq.name="iq"
+      iq.type="set"
+      
+      query = StropheRuby::Stanza.new
+      query.name="query"
+      query.ns="jabber:iq:roster"
+      
+      item = StropheRuby::Stanza.new
+      item.name="item"
+      item.set_attribute("jid",jid.scrap_resource)
+      item.set_attribute("subscription","remove")
+      
+      query.add_child(item)
+      iq.add_child(query)
+      send_stanza(iq)
+    end
+    
     #Stop the event loop
     def disconnect
       StropheRuby::EventLoop.stop(@ctx)
     end
     
     #Send a message or presence object to the stream
-    def send(obj)
-      if obj.respond_to?(:stanza)
+    def send(obj)      
+      if obj.respond_to?(:stanza)        
         send_stanza(obj.stanza)      
       else
         raise("Error: StropheRuby::Stanza object has not been set")

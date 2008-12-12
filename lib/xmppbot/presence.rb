@@ -13,6 +13,7 @@ module XMPPBot
         @stanza=stanza
       else
         @stanza = StropheRuby::Stanza.new
+        @stanza.name = "presence"
       end
     end
   

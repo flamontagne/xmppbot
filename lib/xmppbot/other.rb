@@ -17,3 +17,17 @@ module XMPPBot
     DEBUG = StropheRuby::Logging::DEBUG
   end
 end
+
+class String
+    def scrap_resource
+	self.match(/[^\/]*/i).to_s
+    end
+    
+    def resource
+	self.match(/\/.*/i).to_s.delete("/")
+    end
+    
+    def node
+	self.match(/[^\@]*/i).to_s
+    end
+end
