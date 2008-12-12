@@ -39,7 +39,11 @@ module XMPPBot
   
     def body=(str)
       children = self.stanza.children
-  
+      
+      #Strangely enough, sending a "<" character to our stream will terminate it.
+      #I guess expat (the xml parser) should take care of encoding the
+      #special characters to ensure that the xml remains valid... but it doesn't do it.
+      str.gsub!(/[<>]/) {|s| s == "<" ? '&lt;' : '&gt;'}
       if children      
         children.children.text = str
       else  
