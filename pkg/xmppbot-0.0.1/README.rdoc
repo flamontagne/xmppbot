@@ -1,26 +1,68 @@
 = xmppbot
 
-* FIX (url)
-
 == DESCRIPTION:
 
-FIX (describe your package)
+Simple implementation on top of StropheRuby(http://github.com/flamontagne/strophe_ruby/).
+It's for those who want to build simple xmpp bots quickly. It features only the essential :
+- auto accept subscriptions
+- callback for received messages
+- callback for received presences
+- a method to send messages and presences
+- That's it
+
+Warning : StropheRuby is very experimental at the moment. It is definitely NOT ready for production!
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+- Only tested under Debian
+- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe (http://code.stanziq.com/strophe)
+
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+How to use it :
+  
+require 'xmppbot'
+def register_callbacks
+  @bot.on_presence_received do |pres|
+    puts "#{pres.from} is now #{pres.to_s}"
+  end
+    
+  @bot.on_message_received do |msg|
+    if msg.body == "exit"
+      @bot.disconnect
+    else
+      stanza=XMPPBot::Message.new
+      stanza.to=msg.from
+      stanza.body="You said : #{msg.body}"
+      @bot.send(stanza)
+    end
+  end
+end
+
+
+@bot=XMPPBot::Bot.new
+@bot.jid="bot@example.com"
+@bot.password="secret"
+@bot.log_level = XMPPBot::Logging::DEBUG
+@bot.auto_accept_subscriptions = true
+
+@bot.connect do |status|
+  if status == XMPPBot::ConnectionEvents::CONNECT
+    @bot.announce_presence
+    register_callbacks
+  else
+    @bot.disconnect
+  end
+end  
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Compile and install StropheRuby (http://github.com/flamontagne/stropheruby)
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* For now you can install the GEM in the pkg directory. Remember that you need StropheRuby to use XMPPBot ()
 
 == LICENSE:
 

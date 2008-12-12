@@ -37,8 +37,16 @@ module XMPPBot
       self.stanza.type=type
     end
   
+    def show
+      s=self.stanza.child_by_name("show")
+      s ? s.text : nil
+    end
+    
+    #returns the show (away, dnd, chat,xa). if there is none, returns the type which can be : unavailable
+    #subscribe,subscribed,unsubscribe,unsubscribed,probe or error.
     def to_s
-      self.stanza.child_by_name("show").text rescue "available"
+      res = self.show
+      res ? res : self.type.to_s
     end
   end
 end

@@ -1,7 +1,56 @@
+Example of use :
+
+require 'xmppbot'
+
+class Johnny5 < XMPPBot::Bot  
+  def connect
+    super do |status|
+      if status == XMPPBot::ConnectionEvents::CONNECT
+        announce_presence
+        register_callbacks
+      else
+        disconnect
+      end
+    end  
+  end
+  
+  def register_callbacks
+    on_presence_received do |pres|      
+      puts "#{pres.from} is now #{pres.to_s}" unless pres.to_s.strip == 
+""
+    end
+      
+    on_message_received do |msg|
+      if msg.body == "exit"
+        disconnect
+      else
+        stanza=XMPPBot::Message.new
+        stanza.to=msg.from
+        stanza.body="You said : #{msg.body}"
+        send(stanza)
+      end
+    end  
+  end
+end
+
+@bot = Johnny5.new
+@bot.jid = "cripes@jaim.at"
+@bot.password = "cripes"
+@bot.log_level = XMPPBot::Logging::INFO
+@bot.auto_accept_subscriptions = true
+
+@bot.connect
+
+#We pause the execution of the current thread to prevent the program 
+from exiting
+Thread.stop
+
+#Once the parsing thread exits, execution resumes here
+puts "Connection terminated"
+
+
+
+
+
 
 For more information on xmppbot, see http://xmppbot.rubyforge.org
-
-NOTE: Change this information in PostInstall.txt 
-You can also delete it if you don't want it.
-
-

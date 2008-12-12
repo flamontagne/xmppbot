@@ -6,8 +6,7 @@
 
 module XMPPBot
   class Bot
-    attr_accessor :jid, :password, :log_level, :auto_accept_subscriptions
-      
+    attr_accessor :jid, :password, :log_level, :auto_accept_subscriptions      
     #connect, authenticate and start event loop
     def connect
       StropheRuby::EventLoop.prepare
@@ -30,15 +29,13 @@ module XMPPBot
       #start the event loop in a separate thread      
       Thread.new do
         Thread.current.abort_on_exception = true
-        
-        #StropheRuby::EventLoop.run(@ctx)
-        
+                
         @ctx.loop_status=1
         while @ctx.loop_status == 1
           StropheRuby::EventLoop.run_once(@ctx,1)
         end
       
-        #shutdown down strophe and wake up the calling thread 
+        #shutdown down strophe and wake up the calling thread
         StropheRuby::EventLoop.shutdown
         main_thread.wakeup
       end

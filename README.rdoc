@@ -23,7 +23,6 @@ Warning : StropheRuby is very experimental at the moment. It is definitely NOT r
 How to use it :
   
 require 'xmppbot'
-
 def register_callbacks
   @bot.on_presence_received do |pres|
     puts "#{pres.from} is now #{pres.to_s}"
