@@ -3,6 +3,8 @@ Manifest.txt
 PostInstall.txt
 README.rdoc
 Rakefile
+Rakefile.save
+Rakefile.save.1
 lib/xmppbot.rb
 lib/xmppbot/bot.rb
 lib/xmppbot/message.rb

@@ -2,73 +2,78 @@
 
 == DESCRIPTION:
 
-Simple implementation on top of StropheRuby(http://github.com/flamontagne/strophe_ruby/).
-It's for those who want to build simple xmpp bots quickly. It features only the essential :
+This is a simple implementation on top of StropheRuby 'http://github.com/flamontagne/strophe_ruby/'.
+It's for those who want to build xmpp bots quickly. It features only the essential :
 - auto accept subscriptions
 - callback for received messages
 - callback for received presences
 - a method to send messages and presences
 - That's it
 
-Warning : StropheRuby is very experimental at the moment. It is definitely NOT ready for production!
+Warning : StropheRuby is quite experimental at the moment. It is definitely NOT ready for production!
 
 == FEATURES/PROBLEMS:
 
-- Only tested under Debian
-- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe (http://code.stanziq.com/strophe)
-
+- Only tested under Debian so far
+- Does not work under windows
+- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe 'http://code.stanziq.com/strophe'
+- Exiting the program can cause segmentation errors (not really problematic)
 
 == SYNOPSIS:
 
-How to use it :
-  
 require 'xmppbot'
-def register_callbacks
-  @bot.on_presence_received do |pres|
-    puts "#{pres.from} is now #{pres.to_s}"
+
+class Johnny5 < XMPPBot::Bot  
+  def connect
+    super do |status|
+      if status == XMPPBot::ConnectionEvents::CONNECT
+        announce_presence
+        register_callbacks
+      else
+        disconnect
+      end
+    end  
   end
-    
-  @bot.on_message_received do |msg|
-    if msg.body == "exit"
-      @bot.disconnect
-    else
-      stanza=XMPPBot::Message.new
-      stanza.to=msg.from
-      stanza.body="You said : #{msg.body}"
-      @bot.send(stanza)
+  
+  def register_callbacks
+    on_presence_received do |pres|      
+      puts "#{pres.from} is now #{pres.to_s}" unless pres.to_s.strip == ""
     end
+      
+    on_message_received do |msg|
+      if msg.body == "exit"
+        disconnect
+      else
+        stanza=XMPPBot::Message.new
+        stanza.to=msg.from
+        stanza.body="You said : #{msg.body}"
+        send(stanza)
+      end
+    end  
   end
 end
 
-
-@bot=XMPPBot::Bot.new
-@bot.jid="bot@example.com"
-@bot.password="secret"
-@bot.log_level = XMPPBot::Logging::DEBUG
+@bot = Johnny5.new
+@bot.jid = "cripes@jaim.at"
+@bot.password = "cripes"
+@bot.log_level = XMPPBot::Logging::INFO
 @bot.auto_accept_subscriptions = true
 
-@bot.connect do |status|
-  if status == XMPPBot::ConnectionEvents::CONNECT
-    @bot.announce_presence
-    register_callbacks
-  else
-    @bot.disconnect
-  end
-end  
+@bot.connect
 
-== REQUIREMENTS:
+#We pause the execution of the current thread to prevent the program from exiting
+Thread.stop
 
-* Compile and install StropheRuby (http://github.com/flamontagne/stropheruby)
+#Once the parsing thread exits, execution resumes here
+puts "Connection terminated"
 
 == INSTALL:
 
-* For now you can install the GEM in the pkg directory. Remember that you need StropheRuby to use XMPPBot ()
+gem install xmppbot (it will install stropheruby as well)
 
 == LICENSE:
 
-(The MIT License)
-
-Copyright (c) 2008 FIXME full name
+Copyright (c) 2008 François Lamontagne
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -103,7 +103,6 @@ module XMPPBot
     def announce_presence
       presence = StropheRuby::Stanza.new
       presence.name="presence"
-      presence.set_attribute("show", "available")
       send_stanza(presence)    
     end
     

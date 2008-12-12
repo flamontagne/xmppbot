@@ -46,7 +46,7 @@ module XMPPBot
     #subscribe,subscribed,unsubscribe,unsubscribed,probe or error.
     def to_s
       res = self.show
-      res ? res : self.type.to_s
+      res ? res : self.type ? self.type : "available"
     end
   end
 end
