@@ -54,8 +54,8 @@ class Johnny5 < XMPPBot::Bot
 end
 
 @bot = Johnny5.new
-@bot.jid = "cripes@jaim.at"
-@bot.password = "cripes"
+@bot.jid = "bot@example.com"
+@bot.password = "secret"
 @bot.log_level = XMPPBot::Logging::INFO
 @bot.auto_accept_subscriptions = true
 
