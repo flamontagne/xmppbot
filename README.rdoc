@@ -21,7 +21,7 @@ Warning : StropheRuby is quite experimental at the moment. It is definitely NOT 
 
 == SYNOPSIS:
 
-*[[How to use XMPPBot]]*
+http://github.com/flamontagne/xmppbot/wikis/how-to-use-xmppbot
 
 == INSTALL:
 
