@@ -21,7 +21,6 @@ Warning : StropheRuby is quite experimental at the moment. It is definitely NOT 
 
 == SYNOPSIS:
 
-<pre>
 require 'xmppbot'
 
 class Johnny5 < XMPPBot::Bot  
@@ -67,7 +66,6 @@ Thread.stop
 
 #Once the parsing thread exits, execution resumes here
 puts "Connection terminated"
-</pre>
 
 == INSTALL:
 
