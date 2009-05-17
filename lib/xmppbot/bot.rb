@@ -32,7 +32,7 @@ module XMPPBot
                 
         @ctx.loop_status=1
         while @ctx.loop_status == 1
-          StropheRuby::EventLoop.run_once(@ctx,1)
+            StropheRuby::EventLoop.run_once(@ctx,1)
         end
       
         #shutdown down strophe and wake up the calling thread
@@ -98,6 +98,11 @@ module XMPPBot
       end
     end
     
+    #send raw data to the stream
+    def send_raw(str)
+      Thread.new{@conn.send_raw_string(str)}
+    end
+    
     #You have to call this after a successful connection to notify everyone that you are online.
     #This is called the "initial presence" (see 5.1.1 at http://xmpp.org/rfcs/rfc3921.html)
     def announce_presence
@@ -123,7 +128,7 @@ module XMPPBot
     private        
     #Internal method that send the actual StropheRuby::Stanza object to the stream
     def send_stanza(stanza)
-      @conn.send(stanza)
+      Thread.new{@conn.send(stanza)}
       @last_send=Time.now
     end
     

@@ -7,4 +7,5 @@ require 'xmppbot/message'
 require 'xmppbot/presence'
 require 'xmppbot/other'
 module XMPPBot
+  VERSION="0.0.3"
 end
