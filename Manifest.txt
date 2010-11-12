@@ -1,15 +1,1 @@
-History.txt
-Manifest.txt
-PostInstall.txt
-README.rdoc
-Rakefile
-lib/xmppbot.rb
-lib/xmppbot/bot.rb
-lib/xmppbot/message.rb
-lib/xmppbot/other.rb
-lib/xmppbot/presence.rb
-script/console
-script/destroy
-script/generate
-test/test_helper.rb
-test/test_xmppbot.rb
+patching file Manifest.tmp
