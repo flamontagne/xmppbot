@@ -3,10 +3,14 @@
 # Really simple implementation of StropheRuby to ease the devleopment process of a XMPP bot
 # Author : Francois Lamontagne
 ############################################################
-
 module XMPPBot
   class Bot
     attr_accessor :jid, :password, :log_level, :auto_accept_subscriptions      
+    
+    def initialize
+      @send_lock = Mutex.new
+    end
+    
     #connect, authenticate and start event loop
     def connect
       StropheRuby::EventLoop.prepare
@@ -27,18 +31,18 @@ module XMPPBot
       main_thread = Thread.current      
     
       #start the event loop in a separate thread      
-      Thread.new do
+      x=Thread.new do
         Thread.current.abort_on_exception = true
-                
-        @ctx.loop_status=1
-        while @ctx.loop_status == 1
-            StropheRuby::EventLoop.run_once(@ctx,1)
-        end
-      
-        #shutdown down strophe and wake up the calling thread
+
+        #that's our blocking call
+        StropheRuby::EventLoop.run(@ctx)
+
+        #cleanup and exit
+        @conn.release
+        @ctx.free        
         StropheRuby::EventLoop.shutdown
-        main_thread.wakeup
-      end
+        main_thread.wakeup    
+      end              
     end
 
     #accept subscription request from the user then send a subscription request to that same user.
@@ -100,7 +104,9 @@ module XMPPBot
     
     #send raw data to the stream
     def send_raw(str)
-      Thread.new{@conn.send_raw_string(str)}
+      @send_lock.synchronize do
+        @conn.send_raw_string(str)
+      end      
     end
     
     #You have to call this after a successful connection to notify everyone that you are online.
@@ -128,8 +134,10 @@ module XMPPBot
     private        
     #Internal method that send the actual StropheRuby::Stanza object to the stream
     def send_stanza(stanza)
-      Thread.new{@conn.send(stanza)}
-      @last_send=Time.now
+      @send_lock.synchronize do
+        @conn.send(stanza)
+        @last_send=Time.now
+      end                
     end
     
     #Signals to the xmpp server that we are still connected every X seconds
