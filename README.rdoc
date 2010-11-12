@@ -2,7 +2,7 @@
 
 == DESCRIPTION:
 
-This is a simple implementation on top of StropheRuby 'http://github.com/flamontagne/strophe_ruby/' to create xmpp bots in
+This is a simple implementation on top of StropheRuby 'http://github.com/flamontagne/stropheruby/' to create xmpp bots in
 a few lines of code.
 
 - auto accept subscriptions
