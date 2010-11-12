@@ -2,50 +2,27 @@
 
 == DESCRIPTION:
 
-This is a simple implementation on top of StropheRuby 'http://github.com/flamontagne/strophe_ruby/'.
-It's for those who want to build xmpp bots quickly. It features only the essential :
+This is a simple implementation on top of StropheRuby 'http://github.com/flamontagne/strophe_ruby/' to create xmpp bots in
+a few lines of code.
+
 - auto accept subscriptions
 - callback for received messages
 - callback for received presences
 - a method to send messages and presences
 - That's about it
 
-Warning : StropheRuby is quite experimental at the moment. It is definitely NOT ready for production!
-
-== FEATURES/PROBLEMS:
-
-- Only tested under Debian
-- Does not work under windows
-- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe 'http://code.stanziq.com/strophe'
-- Exiting the program can cause segmentation errors (not really problematic)
-
-== SYNOPSIS:
-
-http://github.com/flamontagne/xmppbot/wikis/how-to-use-xmppbot
+Warning : StropheRuby is quite experimental at the moment. It is definitely NOT ready for production
 
 == INSTALL:
 
 gem install xmppbot (it will install stropheruby as well)
 
-== LICENSE:
+== SYNOPSIS:
 
-Copyright (c) 2008 François Lamontagne
+http://github.com/flamontagne/xmppbot/wikis/how-to-use-xmppbot
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+== PROBLEMS:
+- Only tested under Debian
+- Does not work under windows
+- No TLS support for now. It will work once TLS with OpenSSL is working in Strophe 'http://code.stanziq.com/strophe'
+- Exiting the program can cause segmentation errors (not really problematic)
